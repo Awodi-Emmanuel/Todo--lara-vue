@@ -4,7 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Models\item;
 use Illuminate\Http\Request;
-use Illuminate\Support\Carborn;
+use Illuminate\Support\Carbon;
 
 class ItemController extends Controller
 {
@@ -78,9 +78,12 @@ class ItemController extends Controller
 
         if($existingItem){
             $existingItem->completed = $request->item['completed'] ? true : false;
-            $existingItem->completed_at = $request->item['completed'] ? Carbon::now : null;
+            $existingItem->completed_at = $request->item['completed'] ? carbon::now() : null;
+            $existingItem->save();
+            return $existingItem;
         }
-        return $existingItem;
+        return "item not found";
+
     }
 
     /**
@@ -91,6 +94,11 @@ class ItemController extends Controller
      */
     public function destroy($id)
     {
-        //
+        $existingItem = Item::find($id);
+        if ($existingItem) {
+            $existingItem->delete();
+            return "Item succeessfully deleted.";
+        }
+        return "item not found.";
     }
 }
